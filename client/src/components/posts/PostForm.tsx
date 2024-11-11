@@ -1,14 +1,14 @@
-import { TextInput, Container, Button, Paper, Title, Stack, Textarea } from '@mantine/core';
+import { Container, Button, Paper, Title, Stack, Textarea, Group, Image, ActionIcon, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import SongSearch from './SongSearch';
+import { Song } from '../../types/post';
+import { IconTrash } from '@tabler/icons-react';
 
 interface PostFormValues {
   caption: string;
-  songs: {
-    title: string;
-    artist: string;
-  }[];
+  songs: Song[];
 }
 
 export default function PostForm() {
@@ -17,13 +17,10 @@ export default function PostForm() {
   const form = useForm<PostFormValues>({
     initialValues: {
       caption: '',
-      songs: [{ title: '', artist: '' }],
+      songs: [],
     },
     validate: {
-      songs: {
-        title: (value) => (!value ? 'Title is required' : null),
-        artist: (value) => (!value ? 'Artist is required' : null),
-      },
+      songs: (value) => (value.length === 0 ? 'At least one song is required' : null),
     },
   });
 
@@ -36,8 +33,8 @@ export default function PostForm() {
     }
   };
 
-  const addSong = () => {
-    form.insertListItem('songs', { title: '', artist: '' });
+  const handleSongSelect = (song: Song) => {
+    form.setFieldValue('songs', [...form.values.songs, song]);
   };
 
   return (
@@ -52,26 +49,42 @@ export default function PostForm() {
               {...form.getInputProps('caption')}
             />
             
-            {form.values.songs.map((_, index) => (
-              <Paper key={index} withBorder p="md">
-                <Stack>
-                  <TextInput
-                    label="Song Title"
-                    required
-                    {...form.getInputProps(`songs.${index}.title`)}
-                  />
-                  <TextInput
-                    label="Artist"
-                    required
-                    {...form.getInputProps(`songs.${index}.artist`)}
-                  />
-                </Stack>
+            <SongSearch onSelect={handleSongSelect} />
+            
+            {form.values.songs.map((song, index) => (
+              <Paper key={song.id} withBorder p="md">
+                <Group justify="apart">
+                  <Group>
+                    <Image
+                      src={song.albumArt}
+                      width={48}
+                      height={48}
+                      radius="sm"
+                      alt={song.title}
+                    />
+                    <div>
+                      <Text size="sm" fw={500}>
+                        {song.title}
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        {song.artist}
+                      </Text>
+                    </div>
+                  </Group>
+                  <ActionIcon
+                    color="red"
+                    variant="subtle"
+                    onClick={() => {
+                      const newSongs = [...form.values.songs];
+                      newSongs.splice(index, 1);
+                      form.setFieldValue('songs', newSongs);
+                    }}
+                  >
+                    <IconTrash size={16} />
+                  </ActionIcon>
+                </Group>
               </Paper>
             ))}
-            
-            <Button type="button" variant="outline" onClick={addSong}>
-              Add Another Song
-            </Button>
             
             <Button type="submit" mt="xl">
               Create Post

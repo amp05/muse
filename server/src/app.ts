@@ -5,6 +5,8 @@ import { errorHandler } from './middleware/error';
 import { routeNotFound } from './middleware/routeNotFound';
 import authRouter from './routes/auth.routes';
 import postRouter from './routes/post.routes';
+import spotifyRouter from './routes/spotify.routes';
+
 const app = express();
 
 // Middleware
@@ -22,6 +24,9 @@ app.use('/api/auth', authRouter);
 
 // Posts
 app.use('/api/posts', postRouter);
+
+// Spotify
+app.use('/api/spotify', spotifyRouter);
 
 // Error handling
 app.use(routeNotFound);

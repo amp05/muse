@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Stack, Text } from '@mantine/core';
+import { Container, Stack, Text, Loader, Center } from '@mantine/core';
 import api from '../../services/api';
 import { Post } from '../../types/post';
 import PostCard from './PostCard';
@@ -24,12 +24,21 @@ export default function Feed() {
     fetchPosts();
   }, []);
 
-  if (loading) return <Text>Loading...</Text>;
-  if (error) return <Text color="red">{error}</Text>;
+  if (loading) return (
+    <Center h="100vh">
+      <Loader color="violet" size="lg" />
+    </Center>
+  );
+  
+  if (error) return (
+    <Center h="100vh">
+      <Text c="red" fw={500}>{error}</Text>
+    </Center>
+  );
 
   return (
     <Container size="sm" py="xl">
-      <Stack>
+      <Stack gap="lg">
         {posts.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
