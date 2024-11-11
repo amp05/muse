@@ -1,0 +1,20 @@
+{
+  "name": "muse-workspace",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "start:server": "npm run dev --workspace=server",
+    "start:client": "npm run start --workspace=client",
+    "lint": "npm run lint --workspaces",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "test": "npm run test --workspaces"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "prettier": "^3.3.3"
+  }
+}

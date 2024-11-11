@@ -1,0 +1,19 @@
+# Root level
+node_modules/
+.DS_Store
+
+# Client
+client/node_modules
+client/build
+client/.env
+client/.env.*
+client/coverage
+client/*.log
+
+# Server
+server/node_modules
+server/dist
+server/.env
+server/.env.*
+server/coverage
+server/*.log
