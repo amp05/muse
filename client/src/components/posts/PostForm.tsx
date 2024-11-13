@@ -1,14 +1,16 @@
-import { Container, Button, Paper, Title, Stack, Textarea, Group, Image, ActionIcon, Text } from '@mantine/core';
+import { Container, Button, Paper, Title, Stack, Textarea, Group, Image, ActionIcon, Text, Badge } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import SongSearch from './SongSearch';
 import { Song } from '../../types/post';
-import { IconTrash } from '@tabler/icons-react';
+import { IconTrash, IconX } from '@tabler/icons-react';
+import VibeSelect from './VibeSelect';
 
 interface PostFormValues {
   caption: string;
   songs: Song[];
+  vibes: string[];
 }
 
 export default function PostForm() {
@@ -18,15 +20,30 @@ export default function PostForm() {
     initialValues: {
       caption: '',
       songs: [],
+      vibes: [],
     },
     validate: {
       songs: (value) => (value.length === 0 ? 'At least one song is required' : null),
+      vibes: (value) => (value.length === 0 ? 'At least one vibe is required' : null),
     },
   });
 
   const handleSubmit = async (values: PostFormValues) => {
     try {
-      await api.post('/posts', values);
+      if (values.songs.length === 0) {
+        form.setFieldError('songs', 'At least one song is required');
+        return;
+      }
+      if (values.vibes.length === 0) {
+        form.setFieldError('vibes', 'At least one vibe is required');
+        return;
+      }
+
+      await api.post('/posts', {
+        caption: values.caption,
+        songs: values.songs,
+        vibes: values.vibes,
+      });
       navigate('/');
     } catch (error) {
       console.error('Failed to create post:', error);
@@ -35,6 +52,16 @@ export default function PostForm() {
 
   const handleSongSelect = (song: Song) => {
     form.setFieldValue('songs', [...form.values.songs, song]);
+  };
+
+  const handleVibeSelect = (vibe: string) => {
+    form.setFieldValue('vibes', [...form.values.vibes, vibe]);
+  };
+
+  const handleVibeRemove = (index: number) => {
+    const newVibes = [...form.values.vibes];
+    newVibes.splice(index, 1);
+    form.setFieldValue('vibes', newVibes);
   };
 
   return (
@@ -85,6 +112,40 @@ export default function PostForm() {
                 </Group>
               </Paper>
             ))}
+            
+            <VibeSelect 
+              onSelect={handleVibeSelect} 
+              selectedVibes={form.values.vibes} 
+            />
+
+            <Group gap="xs">
+              {form.values.vibes.map((vibe, index) => (
+                <Badge
+                  key={index}
+                  variant="light"
+                  color="grape"
+                  radius="xl"
+                  rightSection={
+                    <ActionIcon
+                      size="xs"
+                      radius="xl"
+                      variant="transparent"
+                      onClick={() => handleVibeRemove(index)}
+                    >
+                      <IconX size={10} />
+                    </ActionIcon>
+                  }
+                >
+                  {vibe}
+                </Badge>
+              ))}
+            </Group>
+
+            {form.errors.vibes && (
+              <Text size="sm" c="red">
+                {form.errors.vibes}
+              </Text>
+            )}
             
             <Button type="submit" mt="xl">
               Create Post

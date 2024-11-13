@@ -18,6 +18,7 @@
     "prettier": "^3.3.3"
   },
   "dependencies": {
+    "@mantine/notifications": "^7.14.0",
     "@tabler/icons-react": "^3.21.0"
   }
 }

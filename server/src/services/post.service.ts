@@ -5,6 +5,17 @@ const prisma = new PrismaClient();
 
 export class PostService {
   static async createPost(userId: string, data: CreatePostDTO) {
+    const vibes = await Promise.all(
+      data.vibes.map(async (word) => {
+        const vibe = await prisma.vibe.upsert({
+          where: { word: word.toLowerCase() },
+          update: { useCount: { increment: 1 } },
+          create: { word: word.toLowerCase() },
+        });
+        return vibe;
+      })
+    );
+
     return await prisma.post.create({
       data: {
         caption: data.caption,
@@ -12,9 +23,18 @@ export class PostService {
         songs: {
           create: data.songs,
         },
+        vibes: {
+          connect: vibes.map(v => ({ id: v.id })),
+        },
       },
       include: {
         songs: true,
+        vibes: {
+          select: {
+            word: true,
+            useCount: true,
+          },
+        },
         user: {
           select: {
             id: true,
@@ -36,7 +56,7 @@ export class PostService {
     });
 
     const friendIds = user?.friends.map(friend => friend.id) || [];
-    friendIds.push(userId); // Include user's own posts
+    friendIds.push(userId);
 
     return await prisma.post.findMany({
       where: {
@@ -46,6 +66,12 @@ export class PostService {
       },
       include: {
         songs: true,
+        vibes: {
+          select: {
+            word: true,
+            useCount: true,
+          },
+        },
         user: {
           select: {
             id: true,

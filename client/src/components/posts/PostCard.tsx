@@ -80,6 +80,24 @@ export default function PostCard({ post }: { post: Post }) {
           ))}
         </Stack>
 
+        {/* Vibes */}
+        {post.vibes && post.vibes.length > 0 && (
+          <Group gap="xs" px="md" pb="md">
+            {post.vibes
+              .filter(vibe => vibe.useCount >= 3)
+              .map((vibe) => (
+                <Badge 
+                  key={vibe.word} 
+                  variant="light" 
+                  color="grape"
+                  radius="xl"
+                >
+                  {vibe.word}
+                </Badge>
+              ))}
+          </Group>
+        )}
+
         {/* Actions */}
         <Divider />
         <Group p="xs" justify="space-around">

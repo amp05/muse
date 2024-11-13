@@ -27,6 +27,7 @@ model Post {
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  vibes     Vibe[]   @relation("PostVibes")
 }
 
 model Song {
@@ -37,4 +38,13 @@ model Song {
   spotifyId String?
   postId    String
   post      Post     @relation(fields: [postId], references: [id])
+}
+
+model Vibe {
+  id        String   @id @default(uuid())
+  word      String   @unique
+  useCount  Int      @default(0)
+  posts     Post[]   @relation("PostVibes")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

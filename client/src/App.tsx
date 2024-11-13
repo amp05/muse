@@ -8,6 +8,7 @@ import RegisterForm from './components/auth/RegisterForm';
 import Feed from './components/posts/Feed';
 import PostForm from './components/posts/PostForm';
 import ProtectedRoute from './components/layout/ProtectedRoute';
+import { Notifications } from '@mantine/notifications';
 
 const theme = createTheme({
   primaryColor: 'violet',
@@ -32,6 +33,7 @@ const theme = createTheme({
 function App() {
   return (
     <MantineProvider theme={theme}>
+      <Notifications />
       <AuthProvider>
         <BrowserRouter>
           <AppShell
