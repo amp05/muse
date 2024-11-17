@@ -18,7 +18,7 @@ export default function Navbar() {
           gradient={{ from: 'violet', to: 'grape' }}
           variant="gradient"
         >
-          Muse
+          muse
         </Text>
         
         {user ? (
@@ -30,7 +30,7 @@ export default function Navbar() {
               leftSection={<IconPlus size={16} />}
               radius="xl"
             >
-              Share Music
+              share music
             </Button>
             
             <Menu shadow="md" width={200} position="bottom-end">
