@@ -6,6 +6,7 @@ export interface CreatePostDTO {
       albumArt?: string;
       spotifyId?: string;
     }[];
+    vibes: string[];
   }
   
   export interface PostResponse {

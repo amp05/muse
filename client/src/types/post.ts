@@ -1,3 +1,5 @@
+import { Vibe } from "./vibe";
+
 export interface Song {
     id?: string;
     title: string;
@@ -10,6 +12,7 @@ export interface Song {
     id: string;
     caption?: string;
     songs: Song[];
+    vibes: Vibe[];
     user: {
       id: string;
       username: string;

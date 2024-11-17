@@ -6,6 +6,7 @@ import { routeNotFound } from './middleware/routeNotFound';
 import authRouter from './routes/auth.routes';
 import postRouter from './routes/post.routes';
 import spotifyRouter from './routes/spotify.routes';
+import vibeRouter from './routes/vibe.routes';
 
 const app = express();
 
@@ -27,6 +28,9 @@ app.use('/api/posts', postRouter);
 
 // Spotify
 app.use('/api/spotify', spotifyRouter);
+
+// Vibes
+app.use('/api/vibes', vibeRouter);
 
 // Error handling
 app.use(routeNotFound);
