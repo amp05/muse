@@ -34,7 +34,7 @@ describe('AuthController', () => {
         username: validRegisterData.username,
         createdAt: date,
       } as User;
-      // figure out why the AI said mock should have password when user.create doesnt return password
+      
       prismaMock.user.create.mockResolvedValue(mockUser);
 
       // Act

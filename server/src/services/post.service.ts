@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import { CreatePostDTO } from '../types/post.types';
-
-const prisma = new PrismaClient();
+import prisma from '../lib/prisma';
 
 export class PostService {
   static async createPost(userId: string, data: CreatePostDTO) {
